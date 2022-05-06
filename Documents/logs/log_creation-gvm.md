@@ -101,6 +101,7 @@ Alle (vermelde) variabelen van in `.venv` worden vervangen met `variabeleNaam = 
 
 Omdat `ALLOWED_HOSTS` een lijst type verwacht moet hier het type worden omgevormd, origineel wordt een string type terug gegeven. Dit resulteerd in `ALLOWED_HOSTS = config('ALLOWED_HOSTS' ,cast=Csv())`.
 Omdat `.venv` niet wordt opgenomen in Git door mijn `.gitignore` bestand, blijven alle variabelen lokaal op de server staan en worden de waarder er van niet vrijgegeven.
+De waarden in bovenstaande voorbeeld worden later aangepast aangezien er nog geen eigen databank is aangemaakt.
 
 - Testen of applicatie nog werkt zo als het hoort; `python3 manage.py runserver 10.0.89.147:8080`
 
@@ -147,4 +148,69 @@ Key output:
 
 Key in GitLab toevoegen:
 ![Toevoegen public key op GitLab](https://i.imgur.com/6okxj07.png)
+
+Nog beter zou zijn om een eigen GitLab instantie te draaien met daar een aparte deployment user. Op die manier kan deze user (in bedrijfswereld) niet worden ontslaan en kan er in elke situatie een nieuwe applicatie versie worden opgezet/ge pushed.
+
+### 8. Opstellen PostgresSQL databank
+(Bron is van [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-18-04) voor opstellen PostgresSQL databank).
+
+Installeren van extra packages voor databank:
+`sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib nginx curl`
+
+Bij installatie van Postgres is een standaard gebruiker aangemaakt genaamd `postgres`.
+Met deze gebruiker gaan we nu inloggen:`sudo -u postgres psql` 
+
+![Postgres inlog voorbeeld](https://i.imgur.com/m5wlQFl.png)
+
+- Maken van database
+    - `CREATE DATABASE sitedb;`
+    - `\l` (controle of DB is aangemaakt)
+![Controle gemaakte DB](https://i.imgur.com/NgercV8.png)
+
+
+- Maken van DB gebruiker
+    - `CREATE USER siteuser WITH PASSWORD '1nfra&more';`
+    - `\du` (controle aanmaak db gebruiker)
+![Gebruiksers controle](https://i.imgur.com/xew3S0M.png)
+
+
+
+### 9. Aanpassen parameters databank voor Django
+
+Om Django goed te connecteren moeten er nog een aantal parameters worden gedefinieerd. Daarom voeren we volgende drie commando's uit;
+
+1. `ALTER ROLE siteuser SET client_encoding TO 'utf8';`
+2. `ALTER ROLE siteuser SET default_transaction_isolation TO 'read committed';`
+3. `ALTER ROLE siteuser SET timezone TO 'UTC';` 
+4. `GRANT ALL PRIVILEGES ON DATABASE sitedb TO siteuser;`
+5. `\q` (quit => stop met configureren van database)
+
+### Update .env bestand
+
+Omdat de databank nu is aangemaakt kunnen de omgevings variabelen worden aangepast naar de voorgaand gedefinieerde waarden de databank.
+Het `.env` bestand ziet er als volgt uit:
+```#Secret key purpose:     https://stackoverflow.com/questions/7382149/whats-the-purpose-of-django-setting-secret-key
+    SECRET_KEY = mijn_key_****q2*h***^**vc***5_&!o3(w*
+    DEBUG=True
+    ALLOWED_HOSTS = 10.0.89.147,0.0.0.0
+
+    #DB CONNECTION
+    DB_ENGINE = django.db.backends.sqlite3
+    DB_NAME = sitedb
+    DB_USER = siteuser
+    DB_HOST = localhost
+    DB_PASSWD = 1nfra&more
+    DB_PORT = 5432
+
+    #Email settings
+    EMAIL_HOST =
+    EMAIL_PORT =
+
+    #Time
+    TIME_ZONE = UTC
+```
+
+Om problemen met NGINX later te vermijden moet er nog een lijn code worden toegevoegd aan het `settings.py` bestand.
+![Nginx statische pagina render](https://i.imgur.com/2meuzic.png)
+Dit pad, "static_root" zorgt er voor dat NGINX statische pagina's zonder problemen kan terug vinden en weergeven (renderen) zoal het hoort.
 
