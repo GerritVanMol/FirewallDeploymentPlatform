@@ -124,3 +124,27 @@ Maar daarvoor moest ook de `venv` omgeving opnieuw worden gemaakt. Stappen die i
 ___
 ### 7. Aanmaken deployment gebruiker
 
+Gebruiker aan maken gebeurt best op root gebruiker account; `sudo su`.
+
+Gebruiker zelf maken: `adduser deployment-user` daarna passwoord mee geven, alle andere velden zijn optioneel.
+Voorbeeld gebruiker aanmaken;
+    ![Add user in Ubuntu](https://i.imgur.com/NrJ0rqt.png)
+
+Gebruiker toevoegen aan `sudo` groep: `usermod -aG sudo deployment-user`.
+
+Controleren of gebruiker kan inloggen en of sudo commando's kunnen worden uitgevoerd; `sudo su deployment-user`.
+
+**Succes**:
+![New user, can perform required tasks](https://i.imgur.com/GJ93C9g.png)
+
+#### 7.1 Gebruiker GitLab rechten geven
+Omdat de nieuwe deployment-user nog geen rechten heeft tot de GitLab repository kan deze ook geen code gaan updaten. Daarom wordt er een met `ssh-keygen -t rsa` een key paar gemaakt om toe te voegen aan de GitLab instantie.
+
+![Aan maken ssh keys](https://i.imgur.com/tIj5EN2.png)
+
+Key output:
+![PublicSSH_Key](https://i.imgur.com/NIPQYdt.png)
+
+Key in GitLab toevoegen:
+![Toevoegen public key op GitLab](https://i.imgur.com/6okxj07.png)
+
