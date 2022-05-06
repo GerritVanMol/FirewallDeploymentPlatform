@@ -1,6 +1,6 @@
 # Bachelorproef LOGBOEK
 
-## 2 Server firewall updaten (activeren en poorten openen)
+### 1. Server firewall updaten (activeren en poorten openen)
 - `sudo ufw allow ssh`
 - `sudo ufw allow 80/tcp`
 - `sudo ufw allow 8080/tcp`
@@ -10,9 +10,8 @@
 - `sudo ufw enable` (firewall activeren bij opstart)
         ![Controle firewall enabled](https://i.imgur.com/W7xBTvJ.png)
 
-       
-
-### 2 Opstellen virtuele omgeving
+___
+### 2. Opstellen virtuele omgeving
 - python3 versie controleren:
     ![Python3 versie controle](https://i.imgur.com/ZdV00lZ.png)
 
@@ -23,16 +22,18 @@
 
 
 - `deactivate` (omgeving stoppen)
+___
 
-### 3 Installeren van Django in virtuele omgeving
+### 3. Installeren van Django in virtuele omgeving
  
 - `pip3 install django`
 - `python 3 -m django --verion` (controle succesvolle installatie)
     ![Django versie controle](https://i.imgur.com/RicYiYl.png)
 
     ~~`sudo apt install python3-django`~~    
+___
 
-### 4 Creeren van project structuur (in virtuele omgeving folder)
+### 4. Creeren van project structuur (in virtuele omgeving folder)
 - `cd .venv-platform`
 - `django-admin startproject siteplatform`
         ![Controle project in juiste (venv) folder](https://i.imgur.com/WHN0QU9.png)
@@ -67,8 +68,8 @@
 
 - **Copy maken van nodige packages**
     - `pip3 freeze > requirements.txt`
-
-### 5 Python decouple package activeren
+___
+### 5. Python decouple package activeren
 -  In `~/siteplatform/settings.py` wordt`from decouple import config` toegevoegd
 
 - Bestand aan maken in zelfde folder als `manage.py` genaamd `.venv`:
@@ -111,7 +112,7 @@ Het bestand `.venv` had een verkeerde benaming en moest `.env` zijn.
 Opnieuw testen van server (`python3 manage.py runserver 10.0.89.147:8080`):
 ![Django app back online](https://i.imgur.com/h2TyWzi.png)
 
-### 6 Nieuwe venv omgeving
+### 6. Nieuwe "venv" omgeving
 
 Omdat ik een foutje had gemaakt met mijn eerst virtuele omgeving en voor die map een `.` had gezet, bleef deze in hidden files staan. Waardoor ik deze ook op de Git moest forceren. Maar omdat deze er op werdt geforceerd werden alle andere files ook zichtbaar. Daarom heb ik de project folder hernoemt. 
 Maar daarvoor moest ook de `venv` omgeving opnieuw worden gemaakt. Stappen die ik heb genomen;
@@ -119,5 +120,7 @@ Maar daarvoor moest ook de `venv` omgeving opnieuw worden gemaakt. Stappen die i
 - 'python3 -m venv my_platfrom' (nieuwe map maken)
 - Alle bestanden van oude map (`.venv_platform`) naar nieuwe overmaken (`pmy_platform`)
 - Omgeving opstarten `. myplatfrom/bin/activate`
-- 'pip3 install requirements.txt' (terug installeren van nodige packages)
+- `pip3 install requirements.txt` (terug installeren van nodige packages)
+___
+### 7. Aanmaken deployment gebruiker
 
