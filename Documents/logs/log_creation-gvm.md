@@ -256,4 +256,30 @@ In `settings.py`stond een variabele voor de databank nog op `PASSWD` en niet op 
 ![Migratie succesvol](https://i.imgur.com/WlXhewZ.png)
 
 
+---
+
+
+### 12. Maken van super user voor Django admin paneel
+
+- `python3 manage.py createsuperuser`
+![Maken van superuser](https://i.imgur.com/MHieCVB.png)
+
+Statische waarden van applicatie opslaan:
+- `python3 manage.py collectstatic`
+![Opslaan statische files](https://i.imgur.com/FlD8H4g.png)
+
+Testen applicatie met nieuwe databank configuratie:
+![startup server](https://i.imgur.com/DnOTAAo.png)
+
+
+Admin paneel:
+![Applicatie admin paneel](https://i.imgur.com/eF3smLQ.png)
+
+Inloggen als user `gerrit` met zelfde student WW:
+![Logging in](https://i.imgur.com/cTCitBQ.png)
+
+Admin paneel:
+![Admin paneel (logged in)](https://i.imgur.com/sCq7B1s.png)
+
+
 
