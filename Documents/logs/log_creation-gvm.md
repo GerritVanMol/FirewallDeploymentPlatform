@@ -118,8 +118,8 @@ Opnieuw testen van server (`python3 manage.py runserver 10.0.89.147:8080`):
 Omdat ik een foutje had gemaakt met mijn eerst virtuele omgeving en voor die map een `.` had gezet, bleef deze in hidden files staan. Waardoor ik deze ook op de Git moest forceren. Maar omdat deze er op werdt geforceerd werden alle andere files ook zichtbaar. Daarom heb ik de project folder hernoemt. 
 Maar daarvoor moest ook de `venv` omgeving opnieuw worden gemaakt. Stappen die ik heb genomen;
 - `sudo rm -rf venv` (verwijderen virtuele omgeving)
-- 'python3 -m venv my_platfrom' (nieuwe map maken)
-- Alle bestanden van oude map (`.venv_platform`) naar nieuwe overmaken (`pmy_platform`)
+- `python3 -m venv my_platfrom` (nieuwe map maken)
+- Alle bestanden van oude map (`.venv_platform`) naar nieuwe overmaken (`my_platform`)
 - Omgeving opstarten `. myplatfrom/bin/activate`
 - `pip3 install requirements.txt` (terug installeren van nodige packages)
 ___
@@ -185,7 +185,7 @@ Om Django goed te connecteren moeten er nog een aantal parameters worden gedefin
 4. `GRANT ALL PRIVILEGES ON DATABASE sitedb TO siteuser;`
 5. `\q` (quit => stop met configureren van database)
 
-### Update .env bestand
+### 10. Update .env bestand
 
 Omdat de databank nu is aangemaakt kunnen de omgevings variabelen worden aangepast naar de voorgaand gedefinieerde waarden de databank.
 Het `.env` bestand ziet er als volgt uit:
@@ -195,7 +195,7 @@ Het `.env` bestand ziet er als volgt uit:
     ALLOWED_HOSTS = 10.0.89.147,0.0.0.0
 
     #DB CONNECTION
-    DB_ENGINE = django.db.backends.sqlite3
+    DB_ENGINE = django.db.backends.postgresql
     DB_NAME = sitedb
     DB_USER = siteuser
     DB_HOST = localhost
@@ -213,4 +213,47 @@ Het `.env` bestand ziet er als volgt uit:
 Om problemen met NGINX later te vermijden moet er nog een lijn code worden toegevoegd aan het `settings.py` bestand.
 ![Nginx statische pagina render](https://i.imgur.com/2meuzic.png)
 Dit pad, "static_root" zorgt er voor dat NGINX statische pagina's zonder problemen kan terug vinden en weergeven (renderen) zoal het hoort.
+
+### 11. Virtuele omgeving op deployment-user
+De deployment user heeft nog geen virtuele omgeving, dus ook daar moet er een worden aangemaakt.
+
+- `python3 -m venv venv` (-m = module, venv = module naam, 2de venv = virtuele omgeving naam)
+- `. venv/bin/activate`
+
+Om later de applicatie actief te laten, zonder deze in een terminal open te houden en te activeren zijn er nog een aantal packages nodig zoals "gunicorn" en eventueel "pillow".
+- `pip3 install django python-decouple gunicorn psycopg2-binary pillow`
+![Installeren van required packages](https://i.imgur.com/I2zLtzn.png)
+
+
+### 12. Toepassen van database update (migreren)
+
+Voor de Django applicatie terug kan in gebruik genomen worden moet de databank worden gemigreerd. 
+
+- `python3 mangage.py migrate` (uitvoeren in map waar manage.py staat)
+
+Voor ik de migratie succesvol was kreeg ik een aantal foutmeldingen:
+
+1. Foutmelding:
+In `settings.py` was de variabele `ENGINE` nog gelijk aan een statische waarde en deze statische waarde had eigenschappen van de standaard database `sqlite3`.
+![Foutmelding verkeerde variabele voor DB engine](https://i.imgur.com/k8DU5N9.png)
+
+**Resolutie:**
+Statische waarde werd vervangen met `config('DB_ENGINE')` zo dat er wordt verwezen naar het `.env` bestand. Ook daar moest de DB engine nog worden aangepast naar `postgresql`.
+
+2. Foutmelding:
+3. Ubuntu firewall (UFW) liet poort 5432 nog niet toe.
+![Poort niet toegelaten](https://i.imgur.com/gBmTrGq.png)
+**Resolutie:**
+Poort toelaten in UFW: `sudo ufw allow 5432/tcp`
+
+3. Foutmelding: 
+
+    ![No password supplied](https://i.imgur.com/pdmQTxU.png)
+**Resolutie:**
+In `settings.py`stond een variabele voor de databank nog op `PASSWD` en niet op `PASSWORD`.
+
+**Succes migratie gelukt!**
+![Migratie succesvol](https://i.imgur.com/WlXhewZ.png)
+
+
 
