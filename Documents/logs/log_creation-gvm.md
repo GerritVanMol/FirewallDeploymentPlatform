@@ -514,3 +514,50 @@ pipeline {
 }
 ```
 De gedefineerde stages zijn zeer premitief, maar wordt later aangevuld.
+
+**Configureren van pipline**
+
+Maken van nieuw item:
+![](https://i.imgur.com/53N4zFz.png)
+
+Benoemen en aanmaken van nieuw item (pipline):
+![](https://i.imgur.com/ZvBLxRv.png)
+
+Pipline beschrijving geven en selecteren op welke manier verbinding wordt gemaakt (via api access token).
+
+![](https://i.imgur.com/ZAEid2u.png)
+
+Selecteren dat pipline script van een SCM (Git Source Management) komt. De error in onderstaande afbeelding is omdat GitLab nog geen SSH key heeft gedefinieerd van de Jenkins server.
+
+![](https://i.imgur.com/JmwkqYN.png)
+
+Repository van `*/master` vervangen naar `*/main`, script pad controleren en pipline opslaan.
+![](https://i.imgur.com/BopH2r2.png)
+
+
+
+**Resolutie pipline error (SSH key toevoegen in GitLab):**
+Key pair aanmaken op de Jenkins-srv;
+![](https://i.imgur.com/pLIvLWJ.png)
+
+- `cd .ssh`
+- `cat id_rsa.pub`
+- Copy paste in GitLab ssh keys:
+![](https://i.imgur.com/R9hmP5v.png)
+
+
+De error blijft persisteren, mogelijks dat de Jenkins interface achterliggend de repository niet opnieuw gaat valideren. Daarom wordt de repo handmatig op de server gezet.
+
+![](https://i.imgur.com/9lRoAtQ.png)
+- `git ls-remote -h --git@gitlab.com:ikdoeict/gerrit.vanmol/automationplatform.git HEAD`
+Voorgaand commando werd mee gegeven op de Jenkins interface
+![](https://i.imgur.com/nJf96sY.png)
+
+**Error bleef persisteren! Na wisselen van SSH naar HTTPS link en uitvoeren van mee gegeven commando in de terminal is de error weg gewerkt.**
+
+![](https://i.imgur.com/M6lOtSp.png)
+![](https://i.imgur.com/SJFejDu.png)
+
+Builds bleven falen, probleem was dat het Jenkinsfile bestand was gedefinieerd in de Django app folder en niet in de root folder van de repository.
+
+![](https://i.imgur.com/blHFspJ.png)
