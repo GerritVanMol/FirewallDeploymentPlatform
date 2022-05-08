@@ -281,5 +281,164 @@ Inloggen als user `gerrit` met zelfde student WW:
 Admin paneel:
 ![Admin paneel (logged in)](https://i.imgur.com/sCq7B1s.png)
 
+___
+### 13. Gunicorn services
+De web applicatie wordt op dit moment enkel gehost wanneer `python3 manage.py runserver 0.0.0.0:8080` in de terminal is uitgevoerd. Eenmaal deze terminal gesloten wordt, is de applicatie ook niet niet meer beschikbaar. Om dit te voorkomen en de applicatie ten alle tijden draaiende te houden zal er worden gerbuik gemaakt van Gunicorn.
+- `gunicorn --bind 0.0.0.0:8080 siteplatform.wsgi` (bind gunicorn aan de web applicatie)
+![](https://i.imgur.com/HkD90Nx.png)
+
+Bovenstaand commando activeert de applicatie op de zelfde manier wanneer men de applicatie zou starten met Django maar dan met Gunicorn.
+Om de applicatie draaiende te houden met Gunicorn moet er eerst de Gunicorn socket worden geconfigureerd.
+
+- `sudo vim /etc/systemd/system/gunicorn.socket`
+
+In dit bestand komt het volgende:
+```
+    [Unit]
+    Description=gunicorn socket
+
+    [Socket]
+    ListenStream=/run/gunicorn.sock
+
+    [Install]
+    WantedBy=sockets.target
+```
+Met `sudo vim /etc/systemd/system/gunicorn.service` wordt een service bestand gemaakt.
+
+In `gunicorn.service` komt het volgende:
+```
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=deployment-user
+Group=www-data
+WorkingDirectory=/home/deployment-user/automationplatform/my_platform/siteplatform
+ExecStart=/home/deployment-user/venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          siteplatform.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+```
+Nu de socket is geconfigureerd kan de Gunicorn service worden gestart.
+- `sudo systemctl start gunicorn.socket` (start service)
+- `sudo systemctl enable gunicorn.socket` (activeer wanneer server opstart)
+![](https://i.imgur.com/nBzFN2S.png)
+
+**Wanneer enige aanpassingen worden gemaakt in het `gunicorn.service` bestand moet met de `daemon` en `gunicorn` reloaden.**
+- `sudo sytemctl daemon-reload`
+- `sudo systemctl restart gunicorn`
+
+
+
+- `sudo systemctl status gunicorn` (controle service actief)
+![](https://i.imgur.com/Xf5JmSf.png)
+
+
+### 14. Nginx configuratie
+
+Omdat Gunicorn de web applicatie wel actief houd maar niet door verwijst naar en poort waar men naar kan surfen zal er gebruik gemaakt worden van Nginx.
+
+Voor Nginx kan worden geconfigureerd moet in het `.env` bestand van de Django applicatie de `DEBUG` variabele op `False` gezet worden.
+
+Nu de DEBUG variable op false staat moet het project worden gelinked in de Nginx configuratie:
+
+- `sudo vim /etc/nginx/sites-available/siteplatform`
+In siteplatform:
+```
+server {
+    listen 80;
+    server_name 10.0.89.147;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/deployment-user/automationplatform/my_platform/siteplatform;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}
+```
+Dit zorgt er voor dat Django zelf niet meer zal proberen om een web interface weer te geven, maar wordt deze taak door gegeven aan Nginx.
+Als er straks een verzoek (reqeust) wordt gestuurd naar de app server, zal op poort `80` de applicatie beschikbaar zijn.
+Voor dit kan moet deze 'site' enabled zijn:
+- ` sudo ln -s /etc/nginx/sites-available/siteplatform /etc/nginx/sites-enabled`
+
+Controleren of geen Nginx syntax fouten zijn gemaakt:
+![](https://i.imgur.com/A54rHKZ.png)
+
+Nu de configuratie is aangepast voor Nginx moeten de aanpassingen nog worden doorgevoerd door de service opnieuw op te starten.
+- `sudo systemctl restart nginx`
+
+Als men nu naar het IP suft van de server kan men de applicatie actief zien, zonder dat er bij de URL een poort nummer moet worden mee gegeven. Dat is omdat poort 80 werdt gedefinieerd als standaard in de Nginx configuratie.
+![Web applicatie actief via Nginx](https://i.imgur.com/WIEP8MD.png)
+
+___
+## Jenkins server deploy/install
+Jenkins minimum serverhardware requirements:
+![Jenkins minimum requirements](https://i.imgur.com/RUaMuXJ.png)
+
+In ESXI word een virtuele machine geconfigureerd/opgestart met de nodige resources:
+![jenkins-srv resources](https://i.imgur.com/Dv8addJ.png)
+
+Jenkins heeft Java nodig om te werken, daarom controleren of JDK al is geinstalleerd;
+- `java --version`
+
+(Java is nog niet geinstalleerd):
+![](https://i.imgur.com/pNndeLc.png)
+
+Installeren van JDK;
+- `sudo apt install openjdk-8-jdk`
+- `java -version` (controle succesvole installatie)
+![](https://i.imgur.com/UV95iZA.png)
+
+Installeren Jenkins Long Term Release:
+![](https://i.imgur.com/7EnjhOY.png)
+
+```
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+```
+
+Succesvole Jenkins installatie:
+![](https://i.imgur.com/XAZBmAS.png)
+
+Om zeker te zijn kan er naar het server IP-adres (10.0.89.148) worden gegaan om te kijken of Jenkins actief is.
+Jenkins wordt geserveerd op poort 8080, om deze pagina te bereiken moet de Ubuntu firewall (UFW) deze eerst toelaten:
+- `sudo ufw allow 8080/tcp` (poort voor Jenkins)
+- `sudo ufw allow ssh` (Mezelf niet buitensluiten voor toegang tot de server)
+- `sudo ufw enable` (firewall updaten/opstarten wanner server opstart)
+
+![Jenkins actief](https://i.imgur.com/nZxbuLa.png)
+
+Om toegant te krijgen to de Jenkins omgeving moet het initeel paswoord worden ingegeven.
+- `sudo cat /var/lib/jenkins/secrets/initialAdminPassword` (paswoord ophalen in terminal)
+**Paswoord ingeven op webinterface:**
+![](https://i.imgur.com/LcNlXdU.png)
+**Installeren van gesuggereerde plugins:**
+![](https://i.imgur.com/BVbm0WW.png)
+![](https://i.imgur.com/dhRxfaq.png)
+
+**Maken van nieuwe admin gebruiker:**
+![](https://i.imgur.com/3HE83WC.png)
+
+**Configureren van IP/URL waarop Jenkins zal actief zijn:**
+![](https://i.imgur.com/Mp7gX8v.png)
+![](https://i.imgur.com/3HpNzsY.png)
+
+
+
 
 
