@@ -380,6 +380,10 @@ Nu de configuratie is aangepast voor Nginx moeten de aanpassingen nog worden doo
 Als men nu naar het IP suft van de server kan men de applicatie actief zien, zonder dat er bij de URL een poort nummer moet worden mee gegeven. Dat is omdat poort 80 werdt gedefinieerd als standaard in de Nginx configuratie.
 ![Web applicatie actief via Nginx](https://i.imgur.com/WIEP8MD.png)
 
+**Wanneer aanpassingen gebeuren in de project (Django) bestanden moeten een aantal services opnieuw worden opgestart.** Dit moet voor men de applicatie kan gaan bekijken met deze aanpassingen en indien er niet wordt gewerkt met CI/CD.
+1. `sudo systemctl restart nginx`
+2. `sudo systemctl restart gunicorn`
+
 ___
 ## Jenkins server deploy/install
 Jenkins minimum serverhardware requirements:
