@@ -444,5 +444,73 @@ Om toegant te krijgen to de Jenkins omgeving moet het initeel paswoord worden in
 
 
 
+### Jenkins plugins
+
+Nu Jenkins is geinstalleerd moeten er een aantal plugins worden geinstalleerd zo dat de web applicatie kan worden geupdate wanneer enige aanpassingen worden gepushed naar GitLab.
+De nodige plugins daar voor zijn:
+1. Git
+2. GitLab
+
+Op de Jenkins server in de plugin manager kan er worden gecontroleerd of deze plugins al dan niet zijn geinstallerd.
+
+**Git plugin is al geinstalleerd:**
+![](https://i.imgur.com/vwy9UxE.png)
 
 
+**GitLab plugin is nog niet geinstalleerd:**
+![](https://i.imgur.com/TuTJgO6.png)
+
+
+**GitLab plugin installeren:**
+![](https://i.imgur.com/J2Yrb5U.png)
+
+
+### Jenkins access token
+
+![](https://i.imgur.com/1nOCZlK.png)
+
+**GitLab access token:**
+![](https://i.imgur.com/YKcZw6T.png)
+
+Omdat de access token maar éénmaal wordt weergegeven is deze opgeslagen op de Jenkins server:
+![](https://i.imgur.com/g4V2FH5.png)
+
+Nu de access token is aangemaakt kan deze worden toegevoegd op de Jenkins interface.
+
+![](https://i.imgur.com/KAMPveN.png)
+
+![](https://i.imgur.com/dOT4yTM.png)
+
+Testen connectie:
+![](https://i.imgur.com/r7qSXvh.png)
+
+### Jenkins pipline configuratie
+
+In een`jenkinsfile` wordt de pipline en zijn stages gedefinieerd. Deze file moet worden gemaakt in de folder structuur van de Django applicatie.
+
+![](https://i.imgur.com/A3bxogL.png)
+
+In dit (`jenkinsfile`) bestand komt het volgende:
+```
+pipeline {
+    agent any 
+    stages {
+        stage('Build') { 
+            steps {
+                sh "echo 'building application'"
+            }
+        }
+        stage('Test') { 
+            steps {
+                echo "testing"
+            }
+        }
+        stage('Deploy') { 
+            steps {
+                sh  "echo deploying"
+            }
+        }
+    }
+}
+```
+De gedefineerde stages zijn zeer premitief, maar wordt later aangevuld.
