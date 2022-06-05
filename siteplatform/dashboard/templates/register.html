@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <title>Login</title>
   <link rel="shortcut icon" type="image/x-icon" href="https://framagit.org/uploads/-/system/project/avatar/28062/django.png" />
-  <meta name="Login" content="Login page">
-  <link rel="stylesheet" href="{% static 'dashboard/login.css' %}">
+  <meta name="Register" content="Register page">
+  <link rel="stylesheet" href="{% static 'dashboard/register.css' %}">
 </head>
 <body>
   <div class="wrapper">
@@ -14,7 +14,7 @@
         <img src="https://framagit.org/uploads/-/system/project/avatar/28062/django.png" alt="">
     </div>
     <div class="text-center mt-4 name">
-        Login
+        Register
     </div>
     <form class="p-3 mt-3">
         <div class="form-field d-flex align-items-center">
@@ -22,11 +22,27 @@
             <input type="text" name="userName" id="userName" placeholder="Username">
         </div>
         <div class="form-field d-flex align-items-center">
+            <span class="far fa-user"></span>
+            <input type="text" name="eMail" id="eMail" placeholder="Mail">
+        </div>
+        <div class="form-field d-flex align-items-center">
             <span class="fas fa-key"></span>
-            <input type="password" name="password" id="pwd" placeholder="Password">
+            <input type="password" name="password1" id="pwd1" placeholder="Password">
+        </div>
+        <div class="form-field d-flex align-items-center">
+            <span class="fas fa-key"></span>
+            <input type="password" name="password2" id="pwd2" placeholder="Comfirm password">
         </div>
         <button class="btn mt-3">Login</button>
     </form>
 </div>
+<form method="POST" action="">
+    {% csrf_token %}
+
+    {{form.as_p}}
+
+<input type="submit" name="Create new user">
+</form>
+
 </body>
 </html>
