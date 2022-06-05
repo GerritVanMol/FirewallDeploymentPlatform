@@ -13,3 +13,10 @@ class CreateUserForm(UserCreationForm):
     class Meta:
         model = User;
         fields = ['username', 'email', 'password1', 'password2']
+
+class UserForm(ModelForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={"class":"", "placeholder":"Username", "id":"username"}))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={"class":"", "placeholder":"Password", "id":"password1"}))
+    class Meta:
+        model = User;
+        fields = ['username', 'password1']

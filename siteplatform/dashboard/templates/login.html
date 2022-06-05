@@ -16,17 +16,34 @@
     <div class="text-center mt-4 name">
         Login
     </div>
-    <form class="p-3 mt-3">
+    <form method="POST" action="" class="p-3 mt-3">
+        {% csrf_token %}
         <div class="form-field d-flex align-items-center">
             <span class="far fa-user"></span>
-            <input type="text" name="userName" id="userName" placeholder="Username">
+            {{form.username}}
         </div>
         <div class="form-field d-flex align-items-center">
             <span class="fas fa-key"></span>
-            <input type="password" name="password" id="pwd" placeholder="Password">
+            {{form.password1}}
         </div>
+        
         <button class="btn mt-3">Login</button>
+
+        {% for message in messages %}
+        <div class="success pt-4" style="color:green;">
+            <p id="messages">{{ message }}</p>
+        </div>
+        {% endfor %}
+
+        {% if form.errors %}
+        <div class="alert alert-danger pt-4" style="color:red;">
+            <strong>{{ form.errors }}</strong>
+        </div>
+        {% endif %}
     </form>
+    <div class="text-center fs-6">
+        <a href="{% url 'register' %}">Don't have an account?</a>
+    </div>
 </div>
 </body>
 </html>

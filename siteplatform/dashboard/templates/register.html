@@ -1,41 +1,61 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <title>Register</title>
-  <link rel="shortcut icon" type="image/x-icon" href="https://framagit.org/uploads/-/system/project/avatar/28062/django.png" />
-  <meta name="Register" content="Register page">
-  <link rel="stylesheet" href="{% static 'dashboard/register.css' %}">
+    <meta charset="utf-8">
+    <title>Register</title>
+    <link rel="shortcut icon" type="image/x-icon"
+        href="https://framagit.org/uploads/-/system/project/avatar/28062/django.png" />
+    <meta name="Register" content="Register page">
+    <link rel="stylesheet" href="{% static 'dashboard/register.css' %}">
 </head>
+
 <body>
-  <div class="wrapper">
-    <div class="logo">
-        <img src="https://framagit.org/uploads/-/system/project/avatar/28062/django.png" alt="">
+    <div class="wrapper">
+        <div class="logo">
+            <img src="https://framagit.org/uploads/-/system/project/avatar/28062/django.png" alt="">
+        </div>
+        <div class="text-center mt-4 name">
+            Register
+        </div>
+        <form method="POST" action="" class="p-3 mt-3">
+            {% csrf_token %}
+            <div class="form-field d-flex align-items-center">
+                {{form.username}}
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="far fa-user"></span>
+                {{form.email}}
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                {{form.password1}}
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                {{form.password2}}
+            </div>
+
+            <button class="btn mt-3 mb-3">Register</button>
+            
+            {% for message in messages %}
+            <div class="success pt-4" style="color:green;">
+                <p id="messages">{{ message }}</p>
+            </div>
+            {% endfor %}
+
+            {% if form.errors %}
+            <div class="alert alert-danger pt-4" style="color:red;">
+                <strong>{{ form.errors }}</strong>
+            </div>
+            {% endif %}
+        </form>
+        <div class="text-center fs-6">
+            <a href="{% url 'login' %}">Already have an account?</a>
+        </div>
     </div>
-    <div class="text-center mt-4 name">
-        Register
-    </div>
-    <form method="POST" action="" class="p-3 mt-3">
-        {% csrf_token %}
-        <div class="form-field d-flex align-items-center">
-            {{form.username}}
-        </div>
-        <div class="form-field d-flex align-items-center">
-            <span class="far fa-user"></span>
-            {{form.email}}
-        </div>
-        <div class="form-field d-flex align-items-center">
-            <span class="fas fa-key"></span>
-            {{form.password1}}
-        </div>
-        <div class="form-field d-flex align-items-center">
-            <span class="fas fa-key"></span>
-            {{form.password2}}
-        </div>
-        <button class="btn mt-3">Login</button>
-    </form>
-</div>
 
 </body>
+
 </html>
