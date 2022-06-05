@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Login</title>
+  <title>Register</title>
   <link rel="shortcut icon" type="image/x-icon" href="https://framagit.org/uploads/-/system/project/avatar/28062/django.png" />
   <meta name="Register" content="Register page">
   <link rel="stylesheet" href="{% static 'dashboard/register.css' %}">
@@ -16,33 +16,26 @@
     <div class="text-center mt-4 name">
         Register
     </div>
-    <form class="p-3 mt-3">
+    <form method="POST" action="" class="p-3 mt-3">
+        {% csrf_token %}
         <div class="form-field d-flex align-items-center">
-            <span class="far fa-user"></span>
-            <input type="text" name="userName" id="userName" placeholder="Username">
+            {{form.username}}
         </div>
         <div class="form-field d-flex align-items-center">
             <span class="far fa-user"></span>
-            <input type="text" name="eMail" id="eMail" placeholder="Mail">
+            {{form.email}}
         </div>
         <div class="form-field d-flex align-items-center">
             <span class="fas fa-key"></span>
-            <input type="password" name="password1" id="pwd1" placeholder="Password">
+            {{form.password1}}
         </div>
         <div class="form-field d-flex align-items-center">
             <span class="fas fa-key"></span>
-            <input type="password" name="password2" id="pwd2" placeholder="Comfirm password">
+            {{form.password2}}
         </div>
         <button class="btn mt-3">Login</button>
     </form>
 </div>
-<form method="POST" action="">
-    {% csrf_token %}
-
-    {{form.as_p}}
-
-<input type="submit" name="Create new user">
-</form>
 
 </body>
 </html>
