@@ -10,6 +10,7 @@ from .forms import CreateUserForm, UserForm
 
 # Create your views here.
 def loginPage (request):
+    messages.info(request, "")
     form = UserForm()#render form
     if request.method == "POST":
         username = request.POST.get("username")
@@ -19,7 +20,11 @@ def loginPage (request):
 
         if user is not None:
             login(request, user)
+            form = UserForm()
             return HttpResponseRedirect("dashboard")
+        else:             
+            messages.error(request, "Username or password incorrect!")
+            form = UserForm()
     
     context = { "form":form }
     return render(request, "login.html", context)
@@ -33,12 +38,17 @@ def registrationPage (request):
         form = CreateUserForm(request.POST)#post form input
         if form.is_valid():#validate
             form.save()
-            form = CreateUserForm()#Clear form input
             messages.success(request, "Registration successfull for " + form.cleaned_data.get("username"))
+            form = CreateUserForm()#Clear form input
             return HttpResponseRedirect('dashboard')#redirect
             
     context = { "form":form }
     return render(request, "register.html", context)
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect("login")
 
 
 def dashPage(request):

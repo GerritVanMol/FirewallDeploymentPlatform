@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
   <link rel="shortcut icon" type="image/x-icon" href="https://framagit.org/uploads/-/system/project/avatar/28062/django.png" />
   <meta name="Login" content="Login page">
@@ -30,7 +31,7 @@
         <button class="btn mt-3">Login</button>
 
         {% for message in messages %}
-        <div class="success pt-4" style="color:green;">
+        <div class="success pt-4" style="color:red;">
             <p id="messages">{{ message }}</p>
         </div>
         {% endfor %}
@@ -41,7 +42,7 @@
         </div>
         {% endif %}
     </form>
-    <div class="text-center fs-6">
+    <div class="text-center fs-6 pt-6">
         <a href="{% url 'register' %}">Don't have an account?</a>
     </div>
 </div>
