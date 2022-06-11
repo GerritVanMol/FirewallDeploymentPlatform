@@ -7,9 +7,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
-from .models import Firewalls
+from .models import *
 
-from .forms import CreateUserForm, UserForm
+from .forms import *
 import requests
 from bs4 import BeautifulSoup as bs
 
@@ -63,10 +63,28 @@ def dashPage(request):
 
 
 def configurePage(request):
-    return render (request, "dashboard/configure.html", { })
+    firewalls = Firewalls.objects.all()
+    context = { "firewalls":firewalls }
+    return render (request, "dashboard/configure.html", context)
 
 def testPage(request):
-    return render (request, "dashboard/testing.html", { })
+    firewallList = []
+    firewalls =  Firewalls.objects.all()
+    for firewall in firewalls:
+        firewallList.append(firewall.hostname)#, firewall.premise_code
+    return render(request, 'dashboard/testing.html', {'firewallList': firewallList})
+
+
+def createFirewall(request):
+    form = CreateFirewallForm()
+    if request.method == "POST":
+        form = CreateFirewallForm(request.POST)
+        if form.is_valid:
+            form.save()
+    form = CreateFirewallForm()#clear fields
+    context = { 'form': form }
+    return render(request, 'dashboard/create_firewall.html', context)
+
 
 
 def getFirewallData():

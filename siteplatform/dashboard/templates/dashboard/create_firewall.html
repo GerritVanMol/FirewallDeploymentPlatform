@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add firewall</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body style="background: -webkit-linear-gradient(left, #0072ff, #00c6ff);">
+    <div style="margin: 20px;">
+        <h1>Add new firewall</h1>
+        <center>
+
+            <div class="container p-0">
+                <div class="card px-4" style="max-width: 500px; background-color: #dee9ff;" >
+                    <b>
+                        <p class="h10 py-3">Firewall Details</p>
+                    </b>
+                    <form method="POST" action="">
+                        <div class="row gx-3">
+                            <div class="col-6">
+                                <div class="d-flex flex-column">
+                                    <p class="text mb-1">Premise code</p>
+                                    {{ form.premise_code }}
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex flex-column">
+                                    <p class="text mb-1">Hostname</p>
+                                    {{ form.hostname }}
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex flex-column">
+                                    <p class="text mb-1">Vendor/manufacturer</p>
+                                    {{ form.vendor }}
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex flex-column" style="margin-bottom: 20px;">
+                                    <p class="text mb-1">Management IP-address</p>
+                                    {{ form.mgmt_ip }}
+                                </div>
+                            </div>
+                    </form>
+                    
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div style="margin:10px;">
+                    <a href="{% url 'dashboard' %}">
+                        <button class="btn btn-secondary mb-3" type="submit">Cancel</button>
+                    </a>
+                    <span></span>
+                    <button class="btn btn-primary mb-3" type="submit">Create</button>
+                </div>
+    </div>
+
+    </div>
+    </center>
+</body>
+
+</html>

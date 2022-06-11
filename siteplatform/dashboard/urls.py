@@ -8,4 +8,5 @@ urlpatterns = [
     path('dashboard/', views.dashPage, name="dashboard"),
     path('configuration/', views.configurePage, name="configure"),
     path('device-test/', views.testPage, name="testing"),
+    path('create_firewall/', views.createFirewall, name="create_firewall"),
 ]

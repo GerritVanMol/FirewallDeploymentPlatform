@@ -1,28 +1,43 @@
-{% load static %}
-<!doctype html>
-<html lang="en">
+{% extends 'dashboard/nav-bar.html' %}
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Configuration</title>
-  <meta name="Configuration" content="Configuration page">
-  <link rel="stylesheet" href="{% static 'dashboard/nav-bar.css' %}">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="{% static 'dashboard/nav-bar.js' %}"></script>
-</head>
 
-<body>
+{% block content %}
 
-  {% include 'dashboard/nav-bar.html' %}
-
-  {% block content %}
-
+<div style="margin: 20px;">
   <h1>Configure</h1>
 
-  <button class="btn" type="button" style="background-color:#0192d0;">Generate configuration</button>
+  <center>
+    <a href="{% url 'create_firewall' %}">
+      <button type="button" class="btn btn-primary" style="background-color:#0192d0; margin: 10px;">
+        <i class="material-icons">add</i></button>
+    </a>
+    <div class="table-responsive">
+      <table class="table table-dark table-hover" style="  border-radius: 6px;">
+        <tr>
+          <b>
+            <td>Prem code</td>
+            <td>Hostname</td>
+            <td>Vendor</td>
+            <td>Last updated</td>
+            <td>Edit FW</td>
+            <td>Remove FW</td>
+          </b>
+        </tr>
+        {% for firewall in firewalls %}
+        <tr>
+          <td>{{ firewall.premise_code }}</td>
+          <td>{{ firewall.hostname }}</td>
+          <td>{{ firewall.vendor }}</td>
+          <td>{{ firewall.date_created }}</td>
+          <td><a href="#"><button type="button" class="btn"><span><i
+                    class="material-icons">mode_edit</i></span></button></a></td>
+          <td><a href="#"><button type="button" class="btn"><i class="material-icons">delete</i></button></a></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </center>
+</div>
 
-  {% endblock %}
 
-</body>
+{% endblock %}

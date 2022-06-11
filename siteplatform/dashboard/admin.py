@@ -1,6 +1,6 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Firewalls
+from .models import *
 
 admin.site.register(Firewalls)

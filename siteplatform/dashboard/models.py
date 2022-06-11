@@ -3,12 +3,23 @@ from django.db import models
 
 # Create your models here.
 class Firewalls(models.Model):
+    STATE = (
+        ('Active', 'Active'),
+        ('Inactive', 'Inactive'),
+    )
+    VENDORS = (
+        ('Palo Alot', 'Palo Alto'),
+        ('Fortinet', 'Fortinet'),
+        ('Juniper', 'Juniper'),
+        ('Barracuda', 'Barracuda'),
+    )
+
     mgmt_ip = models.GenericIPAddressField(max_length=14)
-    state = models.BooleanField()
+    state = models.BooleanField(choices=STATE, null=True)
     hostname = models.CharField(max_length=50)
-    vendor = models.CharField(max_length=20)
-    premise_code = models.CharField(max_length=5)
-    software_version = models.CharField(max_length=12)
+    vendor = models.CharField(max_length=20, choices=VENDORS)
+    premise_code = models.CharField(max_length=6)
+    software_version = models.CharField(max_length=12, null=True)
     configuration_file = models.FileField(upload_to="media",blank=True)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
