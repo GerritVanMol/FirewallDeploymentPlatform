@@ -10,15 +10,15 @@
 
 <body style="background: -webkit-linear-gradient(left, #0072ff, #00c6ff);">
     <div style="margin: 20px;">
-        <h1>Add new firewall</h1>
+        <h1>Configure firewall</h1>
         <center>
-
-            <div class="container p-0">
-                <div class="card px-4" style="max-width: 500px; background-color: #dee9ff;" >
-                    <b>
-                        <p class="h10 py-3">Firewall Details</p>
-                    </b>
-                    <form method="POST" action="">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="container p-0">
+                    <div class="card px-4" style="max-width: 500px; background-color: #dee9ff;">
+                        <b>
+                            <p class="h10 py-3">Firewall Details</p>
+                        </b>
                         <div class="row gx-3">
                             <div class="col-6">
                                 <div class="d-flex flex-column">
@@ -44,22 +44,33 @@
                                     {{ form.mgmt_ip }}
                                 </div>
                             </div>
-                    </form>
-                    
+                        </div>
+                    </div>
+
+                    {% for message in messages %}
+                    <div class="success pt-4" style="color:green;">
+                        <p id="messages">{{ message }}</p>
+                    </div>
+                    {% endfor %}
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger pt-4" style="color:red;">
+                        <strong>{{ form.errors }}</strong>
+                    </div>
+                    {% endif %}
+
+                </div>
+                <div class="col-12">
+                    <div style="margin:10px;">
+                        <a href="{% url 'dashboard' %}">
+                            <button class="btn btn-secondary mb-3" type="button">Cancel</button>
+                        </a>
+                        <span></span>
+                        <button class="btn btn-primary mb-3" type="submit">Create</button>
                     </div>
                 </div>
-            </div>
-            <div class="col-12">
-                <div style="margin:10px;">
-                    <a href="{% url 'dashboard' %}">
-                        <button class="btn btn-secondary mb-3" type="submit">Cancel</button>
-                    </a>
-                    <span></span>
-                    <button class="btn btn-primary mb-3" type="submit">Create</button>
-                </div>
     </div>
-
-    </div>
+    </form>
     </center>
 </body>
 

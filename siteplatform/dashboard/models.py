@@ -8,16 +8,16 @@ class Firewalls(models.Model):
         ('Inactive', 'Inactive'),
     )
     VENDORS = (
-        ('Palo Alot', 'Palo Alto'),
+        ('Palo Alto', 'Palo Alto'),
         ('Fortinet', 'Fortinet'),
         ('Juniper', 'Juniper'),
         ('Barracuda', 'Barracuda'),
     )
 
     mgmt_ip = models.GenericIPAddressField(max_length=14)
-    state = models.BooleanField(choices=STATE, null=True)
+    state = models.BooleanField(choices=STATE, null=True, default=False)
     hostname = models.CharField(max_length=50)
-    vendor = models.CharField(max_length=20, choices=VENDORS)
+    vendor = models.CharField(max_length=20, choices=VENDORS, default='Fortinet')
     premise_code = models.CharField(max_length=6)
     software_version = models.CharField(max_length=12, null=True)
     configuration_file = models.FileField(upload_to="media",blank=True)

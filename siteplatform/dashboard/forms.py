@@ -27,8 +27,7 @@ class UserForm(ModelForm):
 class CreateFirewallForm(ModelForm):
     premise_code = forms.CharField(widget=forms.TextInput(attrs={"class":"", "placeholder":"e.g. BXL-012", "id":"premise_code"}))
     hostname = forms.CharField(widget=forms.TextInput(attrs={"class":"", "placeholder":"e.g. NMS-FW1", "id":"hostname"}))
-    #mgmt_ip = forms.CharField(widget=forms.GenericIPAddressField(attrs={"class":"", "placeholder":"", "id":"mgmt_ip"}))
-    vendor = forms.CharField(widget=forms.TextInput(attrs={"class":"", "placeholder":"", "id":"vendor"}))
+    mgmt_ip = forms.GenericIPAddressField()
     class Meta:
         model = Firewalls
         fields = ['premise_code', 'hostname', 'mgmt_ip', 'vendor']

@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from multiprocessing import context
 from telnetlib import STATUS
 from urllib import response
@@ -79,10 +80,24 @@ def createFirewall(request):
     form = CreateFirewallForm()
     if request.method == "POST":
         form = CreateFirewallForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             form.save()
-    form = CreateFirewallForm()#clear fields
+            form = CreateFirewallForm()#clear fields
+            return redirect('dashboard')
     context = { 'form': form }
+    return render(request, 'dashboard/create_firewall.html', context)
+
+
+def updateFirewall(request, pk):
+    firewall = Firewalls.objects.get(id=pk)
+    form = CreateFirewallForm(instance=firewall)
+    if request.method == "POST":
+        form = CreateFirewallForm(request.POST, instance=firewall)
+        if form.is_valid():
+            form.save()
+            form = CreateFirewallForm()#clear fields
+            return redirect('configure')
+    context = {'form':form}
     return render(request, 'dashboard/create_firewall.html', context)
 
 

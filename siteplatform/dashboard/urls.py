@@ -9,4 +9,5 @@ urlpatterns = [
     path('configuration/', views.configurePage, name="configure"),
     path('device-test/', views.testPage, name="testing"),
     path('create_firewall/', views.createFirewall, name="create_firewall"),
+    path('update_firewall/<str:pk>/', views.updateFirewall, name="update_firewall"),
 ]
