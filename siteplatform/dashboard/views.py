@@ -71,32 +71,28 @@ def configurePage(request):
 
 def testPage(request):
     firewalls = Firewalls.objects.all()
+    messages.success(request, "")
     context = { "firewalls":firewalls }
     return render(request, 'dashboard/testing.html', context)
 
 
-
-def testFirewall(request, pk):
-    reached = []                                              
-    not_reached = []
-    #firewallList = []
-    #firewalls =  Firewalls.objects.all()
-    #for firewall in firewalls:
-    #    firewallList.append(firewall.hostname + ", " + firewall.mgmt_ip)#, firewall.premise_code
-    firewall = Firewalls.objects.get(id=pk)
-    form = CreateFirewallForm(instance=firewall)
-    
-    context = { 'form': form }
-    return render(request, 'dashboard/testing.html', context)
+#def testFirewall(request, pk):
+#    firewall = Firewalls.objects.get(id=pk)#retrieve firewalls using id as primary key
+#    form = CreateFirewallForm(instance=firewall)#return form with firewall names
+#    context = { 'form': form }
+#    return render(request, 'dashboard/testing.html', context)
 
 
 def pingSelectedFirewall(request):
     firewall = request.POST.get('firewall_selection', False)
     response = os.system("ping -c 1 " + firewall)
     if response == 0:
-        return redirect('configure')
+        messages.success(request, " Device with IP-address  '" + firewall + "'  is active! ")
+        Firewalls.objects.filter(mgmt_ip=firewall).update(state=True)#Update state of object
+        return redirect("testing")
     else:
-        return redirect('dashboard')
+        messages.error(request, " Device with IP-address  '" + firewall + "' could NOT be found! ")
+        return redirect("testing")
 
 
 def createFirewall(request):
