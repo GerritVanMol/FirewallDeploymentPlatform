@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Add firewall</title>
+    <title>Configure firewall</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -42,6 +42,12 @@
                                 <div class="d-flex flex-column" style="margin-bottom: 20px;">
                                     <p class="text mb-1">Management IP-address</p>
                                     {{ form.mgmt_ip }}
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex flex-column" style="margin-bottom: 20px;">
+                                    <p class="text mb-1">Upload configuration file (.CSV)</p>
+                                    {{ form.configuration_file }}
                                 </div>
                             </div>
                         </div>

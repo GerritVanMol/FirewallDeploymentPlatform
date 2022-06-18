@@ -1,3 +1,4 @@
+from email.policy import default
 from logging import PlaceHolder
 from random import choices
 from django import forms
@@ -30,4 +31,4 @@ class CreateFirewallForm(ModelForm):
     mgmt_ip = forms.GenericIPAddressField()
     class Meta:
         model = Firewalls
-        fields = ['premise_code', 'hostname', 'mgmt_ip', 'vendor']
+        fields = ['premise_code', 'hostname', 'mgmt_ip', 'vendor', 'state', 'configuration_file']

@@ -3,9 +3,52 @@
 {% block content %}
 
 <div style="margin: 20px;">
-  <h1>Test devices</h1>
-  <center>
-    <button class="btn" type="submit" style="background-color:#0192d0;">Send ping</button>
-  </center>
+    <h1>Connectivity</h1>
+    <center>
+        <form method="POST" action="{% url 'send_ping' %}">
+            {% csrf_token %}
+            <div class="container p-0">
+                <div class="card px-4" style="max-width: 500px; background-color: #dee9ff;">
+                    <b>
+                        <p class="h10 py-3">Firewall ping test</p>
+                    </b>
+                    <div class="row gx-3">
+                        <div class="col-12">
+                            <div class="d-flex flex-column" style="margin-bottom:20px;">
+                                <p class="text mb-1">Select firewall to test</p>
+                                <select name="firewall_selection">
+                                    {% for firewall in firewalls %}
+                                    <option value="{{firewall.mgmt_ip}}" name='{{firewall.hostname}}'>
+                                        Prem: {{ firewall.premise_code }}, Host:{{ firewall.hostname }},
+                                        IP:{{ firewall.mgmt_ip }}</option>
+                                    </a>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% for message in messages %}
+                <div class="success pt-4" style="color:green;">
+                    <p id="messages">{{ message }}</p>
+                </div>
+                {% endfor %}
+
+                {% if form.errors %}
+                <div class="alert alert-danger pt-4" style="color:red;">
+                    <strong>{{ form.errors }}</strong>
+                </div>
+                {% endif %}
+
+            </div>
+            <div class="col-12">
+                <div style="margin:10px;">
+                    <span></span>
+                    <button class="btn btn-primary mb-3" type="submit">Ping</button>
+                </div>
+            </div>
 </div>
+</form>
+</center>
 {% endblock %}

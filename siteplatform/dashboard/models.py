@@ -4,8 +4,8 @@ from django.db import models
 # Create your models here.
 class Firewalls(models.Model):
     STATE = (
-        ('Active', 'Active'),
-        ('Inactive', 'Inactive'),
+        (True, 'Active'),
+        (False, 'Inactive'),
     )
     VENDORS = (
         ('Palo Alto', 'Palo Alto'),
@@ -15,11 +15,11 @@ class Firewalls(models.Model):
     )
 
     mgmt_ip = models.GenericIPAddressField(max_length=14)
-    state = models.BooleanField(choices=STATE, null=True, default=False)
+    state = models.BooleanField(choices=STATE, blank=True, default=False)
     hostname = models.CharField(max_length=50)
     vendor = models.CharField(max_length=20, choices=VENDORS, default='Fortinet')
     premise_code = models.CharField(max_length=6)
-    software_version = models.CharField(max_length=12, null=True)
+    software_version = models.CharField(max_length=12, blank=True, default='Unknown')
     configuration_file = models.FileField(upload_to="media",blank=True)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 

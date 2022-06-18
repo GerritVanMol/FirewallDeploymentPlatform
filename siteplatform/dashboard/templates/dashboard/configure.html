@@ -2,7 +2,6 @@
 
 
 {% block content %}
-
 <div style="margin: 20px;">
   <h1>Configure</h1>
 
@@ -29,15 +28,14 @@
           <td>{{ firewall.hostname }}</td>
           <td>{{ firewall.vendor }}</td>
           <td>{{ firewall.date_created }}</td>
-          <td><a href="{% url 'update_firewall' firewall.id %}"><button type="button" class="btn"><span><i
-                    class="material-icons">mode_edit</i></span></button></a></td>
-          <td><a href="#"><button type="button" class="btn"><i class="material-icons">delete</i></button></a></td>
+          <td><a href="{% url 'update_firewall' firewall.id %}"><button type="button" class="btn btn-primary"><span><i
+                    class="material-icons btn-primary">mode_edit</i></span></button></a></td>
+          <td><a href="{% url 'delete_firewall' firewall.id %}"><button type="button" class="btn btn-danger"><span><i
+                  class="material-icons"">delete</i></span></button></a></td>
         </tr>
         {% endfor %}
       </table>
     </div>
   </center>
 </div>
-
-
 {% endblock %}

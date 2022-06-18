@@ -9,10 +9,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
 from .models import *
-
+import subprocess
 from .forms import *
 import requests
 from bs4 import BeautifulSoup as bs
+import os
 
 
 # Create your views here.
@@ -69,17 +70,40 @@ def configurePage(request):
     return render (request, "dashboard/configure.html", context)
 
 def testPage(request):
-    firewallList = []
-    firewalls =  Firewalls.objects.all()
-    for firewall in firewalls:
-        firewallList.append(firewall.hostname)#, firewall.premise_code
-    return render(request, 'dashboard/testing.html', {'firewallList': firewallList})
+    firewalls = Firewalls.objects.all()
+    context = { "firewalls":firewalls }
+    return render(request, 'dashboard/testing.html', context)
+
+
+
+def testFirewall(request, pk):
+    reached = []                                              
+    not_reached = []
+    #firewallList = []
+    #firewalls =  Firewalls.objects.all()
+    #for firewall in firewalls:
+    #    firewallList.append(firewall.hostname + ", " + firewall.mgmt_ip)#, firewall.premise_code
+    firewall = Firewalls.objects.get(id=pk)
+    form = CreateFirewallForm(instance=firewall)
+    
+    context = { 'form': form }
+    return render(request, 'dashboard/testing.html', context)
+
+
+def pingSelectedFirewall(request):
+    firewall = request.POST.get('firewall_selection', False)
+    response = os.system("ping -c 1 " + firewall)
+    if response == 0:
+        return redirect('configure')
+    else:
+        return redirect('dashboard')
 
 
 def createFirewall(request):
     form = CreateFirewallForm()
     if request.method == "POST":
-        form = CreateFirewallForm(request.POST)
+        form = CreateFirewallForm(request.POST, request.FILES)
+        #if request.FILES != 0:
         if form.is_valid():
             form.save()
             form = CreateFirewallForm()#clear fields
@@ -99,6 +123,15 @@ def updateFirewall(request, pk):
             return redirect('configure')
     context = {'form':form}
     return render(request, 'dashboard/create_firewall.html', context)
+
+def deleteFirewall(request, pk):
+    firewall = Firewalls.objects.get(id=pk)#
+    if request.method == "POST":
+        firewall.delete()
+        return redirect('dashboard')
+    context = { 'firewall':firewall }
+    return render(request, 'dashboard/remove_firewall.html', context)
+
 
 
 

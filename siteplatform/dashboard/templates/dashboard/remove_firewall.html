@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Delete firewall</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body style="background: -webkit-linear-gradient(left, #0072ff, #00c6ff);">
+    <div style="margin: 20px;">
+        <h1>Delete firewall</h1>
+        <center>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="container p-0">
+                    <div class="card px-4" style="max-width: 500px; background-color: #dee9ff;">
+                        <b>
+                            <p class="h10 py-3" style="color:red;">The following firewall will be deleted!</p>
+                        </b>
+                        <div class="row gx-3">
+                            <div class="col-12">
+                                <div class="d-flex flex-column">
+                                    <p class="text mb-1">Hostname:</p>
+                                    {{ firewall }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for message in messages %}
+                    <div class="success pt-4" style="color:green;">
+                        <p id="messages">{{ message }}</p>
+                    </div>
+                    {% endfor %}
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger pt-4" style="color:red;">
+                        <strong>{{ form.errors }}</strong>
+                    </div>
+                    {% endif %}
+
+                </div>
+                <div class="col-12">
+                    <div style="margin:10px;">
+                        <a href="{% url 'dashboard' %}">
+                            <button class="btn btn-secondary mb-3" type="button">Cancel</button>
+                        </a>
+                        <span></span>
+                        <button class="btn btn-danger mb-3" type="submit">Delete</button>
+                    </div>
+                </div>
+    </div>
+    </form>
+    </center>
+</body>
+
+</html>
