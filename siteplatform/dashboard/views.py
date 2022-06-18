@@ -76,13 +76,6 @@ def testPage(request):
     return render(request, 'dashboard/testing.html', context)
 
 
-#def testFirewall(request, pk):
-#    firewall = Firewalls.objects.get(id=pk)#retrieve firewalls using id as primary key
-#    form = CreateFirewallForm(instance=firewall)#return form with firewall names
-#    context = { 'form': form }
-#    return render(request, 'dashboard/testing.html', context)
-
-
 def pingSelectedFirewall(request):
     firewall = request.POST.get('firewall_selection', False)
     response = os.system("ping -c 1 " + firewall)
